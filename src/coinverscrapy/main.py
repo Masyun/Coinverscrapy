@@ -20,29 +20,40 @@ import sys
 import logging
 
 from coinverscrapy import __version__
+from coinverscrapy.scraper.Scraper import Scraper
+from coinverscrapy.scraper.ScraperProxy import ScraperProxy
 
 __author__ = "MasYun"
 __copyright__ = "MasYun"
-__license__ = "mit"
+__license__ = "MIT"
 
 _logger = logging.getLogger(__name__)
 
 
-def fib(n):
-    """Fibonacci example function
+def scrapeWebsite(URL):
+    """Main scrape function
 
     Args:
-      n (int): integer
+      URL : string
 
     Returns:
-      int: n-th Fibonacci number
+      int: 0
     """
-    assert n > 0
-    a, b = 1, 1
-    for i in range(n-1):
-        a, b = b, a+b
-    return a
 
+    proxy = ScraperProxy(Scraper(URL))
+    proxy.start()
+    return 0
+
+def parseToJSONFiles(data):
+    """Main parse function
+
+    Args:
+      URL : string
+
+    Returns:
+      int: 0
+    """
+    return 0
 
 def parse_args(args):
     """Parse command line parameters
@@ -54,7 +65,7 @@ def parse_args(args):
       :obj:`argparse.Namespace`: command line parameters namespace
     """
     parser = argparse.ArgumentParser(
-        description="Just a Fibonacci demonstration")
+        description="Coinversable website scraper/PDF parser tool")
     parser.add_argument(
         "--version",
         action="version",
@@ -62,7 +73,7 @@ def parse_args(args):
     parser.add_argument(
         dest="n",
         help="n-th Fibonacci number",
-        type=int,
+        type=str,
         metavar="INT")
     parser.add_argument(
         "-v",
@@ -101,8 +112,14 @@ def main(args):
     args = parse_args(args)
     setup_logging(args.loglevel)
     _logger.debug("Starting crazy calculations...")
-    print("The {}-th Fibonacci number is {}".format(args.n, fib(args.n)))
+
+    scrapeWebsite(args.n)
+
+    # After scraping the website, we should make a call to parseToJSONFiles
+    # and output the data to a directory
+
     _logger.info("Script ends here")
+
 
 
 def run():
