@@ -44,7 +44,7 @@ def scrapeWebsite(URL):
     proxy.start()
     return 0
 
-def parseToJSONFiles(data):
+def parseToJSONFiles(input_location):
     """Main parse function
 
     Args:

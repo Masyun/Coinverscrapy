@@ -16,13 +16,13 @@ class ScraperProxy(IModuleProxy, IModuleTemplate):
             self.scraper.execute()
 
     def initialize(self):
-        print("initialize()")
+        print("ScraperProxy.initialize()")
         pass
 
     def run(self):
-        print("run()")
+        print("ScraperProxy.run()")
         self.execute()
 
     def finalize(self):
-        print("finalize()")
+        print("ScraperProxy.finalize()")
         pass

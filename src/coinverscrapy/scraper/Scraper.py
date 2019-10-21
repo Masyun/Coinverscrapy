@@ -3,7 +3,6 @@ import requests
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from coinverscrapy.model.proxy.IModuleProxy import IModuleProxy
-from coinverscrapy.model.template.IModuleTemplate import IModuleTemplate
 
 
 class Scraper(IModuleProxy):
@@ -25,7 +24,7 @@ class Scraper(IModuleProxy):
 
         pass
 
-    def extract_files_from_url(url):
+    def extract_files_from_url(self, url):
         pass
 
     def store_extracted_files(self, output_folder):
