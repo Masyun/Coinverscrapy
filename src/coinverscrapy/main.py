@@ -30,7 +30,7 @@ __license__ = "MIT"
 _logger = logging.getLogger(__name__)
 
 
-def scrape_website(URL, output_dir):
+def scrape_website(url):
     """Main scrape function
 
     Args:
@@ -39,8 +39,7 @@ def scrape_website(URL, output_dir):
     Returns:
       int: 0
     """
-    output = output_dir
-    proxy = ScraperProxy(Scraper(URL), output)
+    proxy = ScraperProxy(Scraper(url), "pdfs")
     proxy.start()
 
 def parse_tojson(input_location):
@@ -118,7 +117,7 @@ def main(args):
     setup_logging(args.loglevel)
     _logger.debug("Starting crazy calculations...")
 
-    scrape_website(args.url, args.output)
+    scrape_website(args.url)
 
     # After scraping the website, we should make a call to parseToJSONFiles
     # and output the data to a directory

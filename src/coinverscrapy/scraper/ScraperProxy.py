@@ -22,7 +22,13 @@ class ScraperProxy(IModuleTemplate):
         self.scraper.execute()
 
     def finalize(self):
-        download_files(self.scraper.get_data(), self.output)
+        try:
+            print_progress(0, len(self.output), prefix='Progress:', suffix='Complete', bar_length=50)
+            download_files(self.scraper.get_data(), self.output)
+        except:
+            print("\n\n")
+            print("Faulty URL supplied! -> quitting execution")
+            exit(0)
 
 
 """
@@ -32,7 +38,7 @@ function area
 def download_files(urls, output_folder):
     total_filecount = len(urls)
     i = 0
-    print_progress(0, total_filecount, prefix='Progress:', suffix='Complete', bar_length=50)
+
     for url in urls:
         rq = requests.get(url)
         file_name = url[url.rfind('/'):]
@@ -47,7 +53,6 @@ def download_files(urls, output_folder):
 
 def handle_fs(folder_name):
     print("Checking output directory(creating if it doesn't exist)...")
-    print("output directory: " + folder_name)
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
         print("Created directory")
@@ -56,7 +61,7 @@ def handle_fs(folder_name):
         for filename in os.listdir(folder_name):
                 os.unlink(folder_name + '/' + filename)
 
-def print_progress(iteration, total, prefix='', suffix='', decimals=1, bar_length=100):
+def print_progress(iteration, total, prefix='', suffix='', decimals=0, bar_length=100):
     """
     Call in a loop to create terminal progress bar
     @params:
