@@ -39,7 +39,10 @@ def extract_urls_from_url(url):
     pdf_urls = []
     for i, link in enumerate(soup.findAll('a')):
         _FULLURL = link.get('href')
-        if _FULLURL.endswith('.pdf'):
-            pdf_urls.append(_FULLURL)
-
+        try:
+            if _FULLURL.endswith('.pdf'):
+                pdf_urls.append(_FULLURL)
+        except AttributeError as ae:
+            print ("Supplied URL doesn't contain any PDF files! quitting")
+            exit(0)
     return pdf_urls
