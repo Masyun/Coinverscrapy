@@ -1,3 +1,6 @@
+# output directory
+/pdfs
+
 # Temporary and binary files
 *~
 *.py[cod]
