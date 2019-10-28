@@ -1,4 +1,6 @@
-pdfminer3k
+requests
+bs4
+beautifulsoup4
 # =============================================================================
 # DEPRECATION WARNING:
 #
@@ -13,6 +15,6 @@ pdfminer3k
 # pip install -r requirements.txt
 # Remember to also add them in setup.cfg but unpinned.
 # Example:
-# numpy==1.13.3
-# scipy==1.0
+# bs4==*
+# urllib3==*
 #

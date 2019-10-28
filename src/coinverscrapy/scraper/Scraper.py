@@ -1,37 +1,47 @@
-import os
 import requests
-from urllib.parse import urljoin
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup as bs
 from coinverscrapy.model.proxy.IModuleProxy import IModuleProxy
-
 
 class Scraper(IModuleProxy):
 
-    def __init__(self, URL):
-        self.data = []
-        self.URL = URL
-        self.addOne(1234)
-        self.addOne(123)
-        self.addOne(143)
-        self.addOne(1545)
+    def __init__(self, url):
+        self.url = url
+        self.data = {}
+        print(f'Supplied URL to scraper: {self.get_url()} ')
+
 
     def execute(self):
         # Main logic for scraping a webpage - this is where most, if not all logic should be contained
-        print("Scraper.execute()")
-        print("Provided URL: " + self.URL)
-        for entry in range(len(self.data)):
-            print(self.data[entry])
-
+        print(f'Executing scraper on {self.get_url()}\n')
+        self.data = extract_urls_from_url(self.url)
         pass
 
-    def extract_files_from_url(self, url):
-        pass
+    def get_url(self):
+        return self.url
 
-    def store_extracted_files(self, output_folder):
-        pass
+    def get_data(self):
+        return self.data
 
-    def addOne(self, entry):
-        self.data.append(entry)
+"""
+function area
+"""
 
-    def getAll(self):
-        return self.data.copy()
+def extract_urls_from_url(url):
+    """extracts the links to all the PDF files on the webpage and maps them to a logical name(the pdf url)
+
+    Args:
+      url : string
+
+    Returns:
+      names_urls: map
+    """
+    r = requests.get(url)
+
+    soup = bs(r.content, "html.parser")
+    pdf_urls = []
+    for i, link in enumerate(soup.findAll('a')):
+        _FULLURL = link.get('href')
+        if _FULLURL.endswith('.pdf'):
+            pdf_urls.append(_FULLURL)
+
+    return pdf_urls

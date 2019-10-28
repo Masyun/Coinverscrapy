@@ -30,7 +30,7 @@ __license__ = "MIT"
 _logger = logging.getLogger(__name__)
 
 
-def scrapeWebsite(URL):
+def scrape_website(URL, output_dir):
     """Main scrape function
 
     Args:
@@ -39,12 +39,11 @@ def scrapeWebsite(URL):
     Returns:
       int: 0
     """
-
-    proxy = ScraperProxy(Scraper(URL))
+    output = output_dir
+    proxy = ScraperProxy(Scraper(URL), output)
     proxy.start()
-    return 0
 
-def parseToJSONFiles(input_location):
+def parse_tojson(input_location):
     """Main parse function
 
     Args:
@@ -71,8 +70,8 @@ def parse_args(args):
         action="version",
         version="coinverscrapy {ver}".format(ver=__version__))
     parser.add_argument(
-        dest="n",
-        help="n-th Fibonacci number",
+        dest="url",
+        help="url of the webpage to be scraped",
         type=str,
         metavar="INT")
     parser.add_argument(
@@ -89,6 +88,12 @@ def parse_args(args):
         help="set loglevel to DEBUG",
         action="store_const",
         const=logging.DEBUG)
+    parser.add_argument(
+        "-o",
+        "--output",
+        dest="output",
+        help="specify the output directory",
+        type=str)
     return parser.parse_args(args)
 
 
@@ -113,7 +118,7 @@ def main(args):
     setup_logging(args.loglevel)
     _logger.debug("Starting crazy calculations...")
 
-    scrapeWebsite(args.n)
+    scrape_website(args.url, args.output)
 
     # After scraping the website, we should make a call to parseToJSONFiles
     # and output the data to a directory
