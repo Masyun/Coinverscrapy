@@ -1,6 +1,6 @@
 requests
-bs4
 beautifulsoup4
+camelot-py
 # =============================================================================
 # DEPRECATION WARNING:
 #

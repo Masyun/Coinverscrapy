@@ -18,10 +18,15 @@ Note: This skeleton file can be safely removed if not needed!
 import argparse
 import sys
 import logging
+import os
+import camelot
+import json
 
-from coinverscrapy import __version__
-from coinverscrapy.scraper.Scraper import Scraper
-from coinverscrapy.scraper.ScraperProxy import ScraperProxy
+from src.coinverscrapy import __version__
+from src.coinverscrapy.scraper.Scraper import Scraper
+from src.coinverscrapy.scraper.ScraperProxy import ScraperProxy
+from src.coinverscrapy.parser.Parser import Parser
+from src.coinverscrapy.parser.ParserProxy import ParserProxy
 
 __author__ = "MasYun"
 __copyright__ = "MasYun"
@@ -42,6 +47,7 @@ def scrape_website(url):
     proxy = ScraperProxy(Scraper(url), "pdfs")
     proxy.start()
 
+
 def parse_tojson(input_location):
     """Main parse function
 
@@ -51,7 +57,9 @@ def parse_tojson(input_location):
     Returns:
       int: 0
     """
-    return 0
+    proxy = ParserProxy(Parser(input_location), 'json')
+    proxy.start()
+
 
 def parse_args(args):
     """Parse command line parameters
@@ -118,12 +126,8 @@ def main(args):
     _logger.debug("Starting crazy calculations...")
 
     scrape_website(args.url)
-
-    # After scraping the website, we should make a call to parseToJSONFiles
-    # and output the data to a directory
-
+    parse_tojson("pdfs")
     _logger.info("Script ends here")
-
 
 
 def run():
@@ -134,3 +138,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+

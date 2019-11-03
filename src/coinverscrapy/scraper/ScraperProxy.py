@@ -1,15 +1,17 @@
 import os
+import shutil
+
 import requests
 import time
 
 import sys
-from coinverscrapy.model.template.IModuleTemplate import IModuleTemplate
+from src.coinverscrapy.model.template.IModuleTemplate import IModuleTemplate
 
 
 class ScraperProxy(IModuleTemplate):
     def __init__(self, real_scraper, output):
         self.scraper = real_scraper
-        self.output = '../../' + output
+        self.output = output
 
     def checkAccess(self):
         return True
@@ -50,16 +52,14 @@ def download_files(urls, output_folder):
         print_progress(i, total_filecount, prefix='Progress:', suffix='Complete', bar_length=50)
 
 
-
 def handle_fs(folder_name):
     print("Checking output directory(creating if it doesn't exist)...")
-    if not os.path.exists(folder_name):
+    try:
         os.makedirs(folder_name)
         print("Created directory")
-    else:
-        print("Output directory already populated! deleting...")
-        for filename in os.listdir(folder_name):
-                os.unlink(folder_name + '/' + filename)
+    except FileExistsError:
+        print("Output directory already populated!")
+
 
 def print_progress(iteration, total, prefix='', suffix='', decimals=0, bar_length=100):
     """
