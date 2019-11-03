@@ -1,5 +1,6 @@
 # output directory
-/pdfs
+src/coinverscrapy/pdfs
+src/coinverscrapy/json
 
 # Temporary and binary files
 *~
