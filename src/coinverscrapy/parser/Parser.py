@@ -37,33 +37,8 @@ class Parser(IModuleProxy):
                 raw_name = directory_dict[1][:-4]  # strip .pdf tag so we can replace it with .json
 
                 for table in tables:  # Each table in the file
-                    # print(table.parsing_report['page'])
-                    # print(table)
-                    # print(table.parsing_report)
                     print(table.df)
-                    # print('---------------------\n')
-                    # table.df.to_json('json/' + raw_name + '.json')
-
-                    # print('json_string: \n{}'.format(json_string))
-                    # raw_json = json.dumps(json_string, indent=4)
-                    json_dict = table.df.to_json(orient="records")
-                    print(table.df[0])
-                    self.handle(table.df[0])
-
-
-                    # i = 0
-                    # for index, row in table.df:
-                    #     self.handleFormatting(row)
-                    #     print(row)
-                    #
-                    #     i += 1
-                    #
-                    #     if i == 10:
-                    #         return
-                        # if row[0].startswith("D\n"): # Swap position of 'D\n' with last \n in line
-                        #     print('row: \n{}'.format(row))
-
-                        # if row[0]
+                    table.df[0] = self.handle(table.df[0])
 
                 # with open(('json/' + raw_name + '.json'), 'w') as json_file:
                 #     json.dump(raw_json, json_file)
