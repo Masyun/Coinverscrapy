@@ -11,7 +11,7 @@ class Scraper(IModuleProxy):
     def execute(self):
         # Main logic for scraping a webpage - this is where most, if not all logic should be contained
         print(f'Executing scraper on {self.get_url()}\n')
-        self.data = extract_urls_from_url(self.url)
+        self.data = extract_urls_from_url(self.get_url())
 
     def get_url(self):
         return self.url
@@ -38,7 +38,7 @@ def extract_urls_from_url(url):
         try:
             if _FULLURL.endswith('.pdf'):
                 pdf_urls.append(_FULLURL)
-        except AttributeError as ae:
+        except AttributeError:
             print ("Supplied URL doesn't contain any PDF files! quitting")
             exit(0)
     return pdf_urls

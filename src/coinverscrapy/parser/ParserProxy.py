@@ -1,7 +1,7 @@
+import os
+
 from src.coinverscrapy.model.proxy.IModuleProxy import IModuleProxy
 from src.coinverscrapy.model.template.IModuleTemplate import IModuleTemplate
-import logging as logger
-import os
 
 
 class ParserProxy(IModuleProxy, IModuleTemplate):
@@ -9,12 +9,8 @@ class ParserProxy(IModuleProxy, IModuleTemplate):
         self.parser = real_parser
         self.output = output
 
-    def checkAccess(self):
-        return True
-
     def initialize(self):
-        if self.checkAccess():
-            handle_fs(self.output)
+        handle_fs(self.output)
 
     def run(self):
         self.parser.execute()
@@ -39,6 +35,14 @@ def handle_fs(folder_name):
         print("Created directory")
     except FileExistsError:
         print("Output directory already populated!")
+        for file in os.listdir(folder_name):
+            file_path = os.path.join(folder_name, file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                # elif os.path.isdir(file_path): shutil.rmtree(file_path)
+            except Exception as e:
+                print(e)
 
 
 def print_progress(iteration, total, prefix='', suffix='', decimals=0, bar_length=100):

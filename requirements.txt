@@ -1,3 +1,4 @@
+camelot
 requests
 beautifulsoup4
 camelot-py

@@ -1,33 +1,29 @@
 import os
-import shutil
-
-import requests
+import sys
 import time
 
-import sys
+import requests
+
 from src.coinverscrapy.model.template.IModuleTemplate import IModuleTemplate
 
 
 class ScraperProxy(IModuleTemplate):
     def __init__(self, real_scraper, output):
-        self.scraper = real_scraper
+        self.__scraper = real_scraper
         self.output = output
 
-    def checkAccess(self):
-        return True
-
     def initialize(self):
-        if self.checkAccess():
-            handle_fs(self.output)
+        handle_fs(self.output)
 
     def run(self):
-        self.scraper.execute()
+        self.__scraper.execute()
 
     def finalize(self):
         try:
             print_progress(0, len(self.output), prefix='Progress:', suffix='Complete', bar_length=50)
-            download_files(self.scraper.get_data(), self.output)
-        except:
+            download_files(self.__scraper.get_data(), self.output)
+        except IOError as ioe:
+            print("error! -> {}".format(ioe))
             print("\n\n")
             print("Faulty URL supplied! -> quitting execution")
             exit(0)
@@ -36,6 +32,7 @@ class ScraperProxy(IModuleTemplate):
 """
 function area
 """
+
 
 def download_files(urls, output_folder):
     total_filecount = len(urls)
@@ -53,12 +50,17 @@ def download_files(urls, output_folder):
 
 
 def handle_fs(folder_name):
-    print("Checking output directory(creating if it doesn't exist)...")
     try:
         os.makedirs(folder_name)
-        print("Created directory")
     except FileExistsError:
-        print("Output directory already populated!")
+        for file in os.listdir(folder_name):
+            file_path = os.path.join(folder_name, file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                # elif os.path.isdir(file_path): shutil.rmtree(file_path)
+            except Exception as e:
+                print(e)
 
 
 def print_progress(iteration, total, prefix='', suffix='', decimals=0, bar_length=100):

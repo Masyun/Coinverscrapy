@@ -44,8 +44,7 @@ def scrape_website(url):
     Returns:
       int: 0
     """
-    proxy = ScraperProxy(Scraper(url), "pdfs")
-    proxy.start()
+    ScraperProxy(Scraper(url), "pdfs").start()
 
 
 def parse_tojson(input_location):
@@ -57,8 +56,7 @@ def parse_tojson(input_location):
     Returns:
       int: 0
     """
-    proxy = ParserProxy(Parser(input_location), 'json')
-    proxy.start()
+    ParserProxy(Parser(input_location), 'json').start()
 
 
 def parse_args(args):
@@ -125,8 +123,9 @@ def main(args):
     setup_logging(args.loglevel)
     _logger.debug("Starting crazy calculations...")
 
-    scrape_website(args.url)
+    # scrape_website(args.url)
     parse_tojson("pdfs")
+
     _logger.info("Script ends here")
 
 
