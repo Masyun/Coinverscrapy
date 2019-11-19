@@ -32,9 +32,8 @@ def handle_fs(folder_name):
     print("Checking output directory(creating if it doesn't exist)...")
     try:
         os.mkdir(folder_name)
-        print("Created directory")
+        print('Created directory {}'.format(folder_name))
     except FileExistsError:
-        print("Output directory already populated!")
         for file in os.listdir(folder_name):
             file_path = os.path.join(folder_name, file)
             try:

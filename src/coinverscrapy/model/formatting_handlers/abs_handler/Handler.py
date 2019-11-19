@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 
-class Json_Handler(ABC):
+class Handler(ABC):
     @abstractmethod
-    def set_next(self, handler: Json_Handler) -> Json_Handler:
+    def set_next(self, handler: Handler) -> Handler:
         pass
 
     @abstractmethod
