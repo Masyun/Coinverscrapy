@@ -39,6 +39,6 @@ def extract_urls_from_url(url):
             if _FULLURL.endswith('.pdf'):
                 pdf_urls.append(_FULLURL)
         except AttributeError:
-            print ("Supplied URL doesn't contain any PDF files! quitting")
+            print("Supplied URL doesn't contain any PDF files! quitting")
             exit(0)
     return pdf_urls

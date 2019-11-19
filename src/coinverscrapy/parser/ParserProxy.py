@@ -69,5 +69,5 @@ def print_progress(iteration, total, prefix='', suffix='', decimals=0, bar_lengt
 
 
 def write_json(urls, output_folder):
-    #TODO
+    # TODO
     pass

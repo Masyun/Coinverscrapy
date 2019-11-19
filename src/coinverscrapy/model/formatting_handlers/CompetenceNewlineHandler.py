@@ -2,9 +2,9 @@ from src.coinverscrapy.model.formatting_handlers.abs_handler.AbstractHandler imp
 import re
 
 
-class NewLineStartHandler(AbstractHandler):
+class CompetenceNewlineHandler(AbstractHandler):
     def handle(self, request: str) -> str:
-        match = re.search('e kandidaat kan', request)
+        match = re.search('\ne kandidaat kan', request)
         if match:
             mutated = re.sub(match.re, "De kandidaat kan", request)
 

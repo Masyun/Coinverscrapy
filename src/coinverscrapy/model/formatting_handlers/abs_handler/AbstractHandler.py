@@ -3,7 +3,6 @@ from src.coinverscrapy.model.formatting_handlers.abs_handler.Handler import Hand
 
 
 class AbstractHandler(Handler):
-
     _next_handler: Handler = None
 
     def set_next(self, handler: Handler) -> Handler:
