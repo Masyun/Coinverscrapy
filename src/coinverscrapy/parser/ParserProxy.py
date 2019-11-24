@@ -1,10 +1,9 @@
 import os
 
-from src.coinverscrapy.model.proxy.IModuleProxy import IModuleProxy
 from src.coinverscrapy.model.template.IModuleTemplate import IModuleTemplate
 
 
-class ParserProxy(IModuleProxy, IModuleTemplate):
+class ParserProxy(IModuleTemplate):
     def __init__(self, real_parser, output):
         self.parser = real_parser
         self.output = output

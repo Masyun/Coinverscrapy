@@ -1,6 +1,9 @@
+import json
 import os
 
 import camelot
+import pandas as pd
+from camelot.core import TableList
 
 from src.coinverscrapy.model.formatting_handlers.CompetenceNewlineHandler import CompetenceNewlineHandler
 from src.coinverscrapy.model.formatting_handlers.GenericListHandler import GenericListHandler
@@ -8,10 +11,9 @@ from src.coinverscrapy.model.formatting_handlers.NumericListEdgecaseHandler impo
 from src.coinverscrapy.model.formatting_handlers.NumericListHandler import NumericListHandler
 from src.coinverscrapy.model.formatting_handlers.RootHandler import RootHandler
 from src.coinverscrapy.model.formatting_handlers.SubTaskHandler import SubTaskHandler
+from src.coinverscrapy.model.json_container.JsonContainer import JsonContainer
+from src.coinverscrapy.model.json_container.JsonEncoder import JsonEncoder
 from src.coinverscrapy.model.proxy.IModuleProxy import IModuleProxy
-
-
-# import tabula
 
 
 class Parser(IModuleProxy):
@@ -22,10 +24,9 @@ class Parser(IModuleProxy):
         self.root_handler = RootHandler()
 
         # Connect the chain of handlers
-        self.setupHandlers()
+        self.setupFormattingHandlers()
 
-    # Chain handlers to your hearts content
-    def setupHandlers(self):
+    def setupFormattingHandlers(self):
         self.root_handler \
             .set_next(GenericListHandler()) \
             .set_next(CompetenceNewlineHandler()) \
@@ -34,36 +35,51 @@ class Parser(IModuleProxy):
             .set_next(NumericListEdgecaseHandler())
 
     def execute(self):
-        # Main logic for checking errors during parsing of PDF files
-        print("Parser.execute()")
         with os.scandir(self.location) as files:
             for file in files:
-                tables = camelot.read_pdf(file.path, pages='all', split_text=True)
+                table = self.formatContent(file)[0]
 
-                # directory_dict = os.path.split(
-                #     file.path)  # directory_dict[0] for path to file, directory_dict[1] for file name
-                # raw_name = directory_dict[1][:-4]  # strip .pdf tag so we can replace it with .json
+                print(type(table))
+                json_obj = JsonContainer(table)
 
-                i = 0
-                report_sum = 0
-                report_count = 0
-                for table in tables:  # Each table in the file
-                    report_sum += table.parsing_report['accuracy']
-                    report_count += 1
-                    fileline_count = 0
+                result_json = json.dumps(json_obj.reprJSON(), cls=JsonEncoder, indent=4)
 
-                    for line in table.df[0]:
-                        table.df[0][fileline_count] = handle(self.root_handler, line)
-                        fileline_count += 1
+                print(result_json)
+                print('\n\n')
 
-                    print(table.df[0])
-                    i += 1
-                    if i == 3:
-                        print('AVERAGE ACCURACY: {}'.format(calculateAvg(report_sum, report_count)))
-                        return
+        #         # tables[0].to_json('json/' + raw_name + '.json')
+        #         # with open(('json/' + raw_name + '.json'), 'w') as json_file:
+        #         #     json.dump(tables[0], json_file)
 
-                # with open(('json/' + raw_name + '.json'), 'w') as json_file:
-                #     json.dump(raw_json, json_file)
+    def formatContent(self, file):
+        tables = camelot.read_pdf(file.path, pages='all', split_text=True)
+
+        directory_dict = os.path.split(
+            file.path)  # directory_dict[0] for path to file, directory_dict[1] for file name
+        raw_name = directory_dict[1][:-4]  # strip .pdf tag so we can replace it with .json
+
+        for table in tables:  # Each table in the file
+            fileline_count = 0
+
+            for line in table.df[0]:
+                table.df[0][fileline_count] = handle(self.root_handler,
+                                                     line)  # Call the chain of handlers to handle each string in this file
+                fileline_count += 1
+
+        if tables.n > 1:
+            tables = appendTables(tables)
+
+        return tables
+
+
+def appendTables(tables):
+    frames = []
+    for table in tables:
+        frames.append(table.df)
+
+    tables = pd.concat(frames, ignore_index=True)
+    return tables
+
 
 
 def handle(handler, row: str):

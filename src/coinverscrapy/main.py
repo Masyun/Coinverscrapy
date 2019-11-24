@@ -43,6 +43,7 @@ def scrape_website(url):
 
     Returns:
       int: 0
+      :param url:
     """
     ScraperProxy(Scraper(url), "pdfs").start()
 
@@ -55,6 +56,7 @@ def parse_tojson(input_location):
 
     Returns:
       int: 0
+      :param input_location:
     """
     ParserProxy(Parser(input_location), 'json').start()
 
