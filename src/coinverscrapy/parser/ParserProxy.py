@@ -15,7 +15,7 @@ class ParserProxy(IModuleTemplate):
         self.parser.execute()
 
     def finalize(self):
-        '''
+        """
         TODO
         try:
             print_progress(0, len(self.output), prefix='Progress:', suffix='Complete', bar_length=50)
@@ -24,7 +24,7 @@ class ParserProxy(IModuleTemplate):
             print("\n\n")
             print("Faulty URL supplied! -> quitting execution")
             exit(0)
-        '''
+        """
 
 
 def handle_fs(folder_name):

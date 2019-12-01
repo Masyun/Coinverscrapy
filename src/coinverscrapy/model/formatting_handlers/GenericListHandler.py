@@ -11,13 +11,13 @@ class GenericListHandler(AbstractHandler):
             match = re.search('\\w+\\s*\\no( )*(\\n)*', request)
             if match:
                 list_vals = re.sub(' \no ', "", request).splitlines(True)
-                list_vals.pop()  # Pop off the pesky final 'o' char from the list because regex is error prone doing this
+                list_vals.pop()  # Pop off the pesky final 'o' char
 
                 mutations = []
 
                 for idx in range(len(list_vals)):
                     if idx > 0:
-                        mutations.append('o ' + list_vals[idx])
+                        mutations.append('- ' + list_vals[idx])
                     else:
                         mutations.append(list_vals[idx])
 
