@@ -20,7 +20,7 @@ class JsonContainer(object):
             data = table.df[0].tolist()
 
         self.parse_meta(data)
-        self.leerdoelen = self.parse_goals(data)
+        self.leerdoelen = self.parse_leerdoelen(data)
 
     def parse_meta(self, data):
         if 'Taak:' in data[1]:  # There is no module line
@@ -31,24 +31,19 @@ class JsonContainer(object):
 
         self.omschrijving = data.pop(0)
 
-    def parse_goals(self, data):
+    def parse_leerdoelen(self, data):
         new_vals = []
         for line in data:
-            # print('line: {}'.format(line))
-            if re.search('(^[a-zA-Z]/[a-zA-Z]+/\w.)', line):
-                # print(len(new_vals))
+            if re.search('(^[a-zA-Z]/[a-zA-Z]+/\w.)', line):  # titel
                 new_vals.append(Leerdoel())
                 # print('Appent one, len: {}'.format(len(new_vals)))
                 new_vals[len(new_vals) - 1].titel = line
 
-            if re.search('((Deeltaak:)\s*)', line):
-                # print(len(new_vals))
+            if re.search('((Deeltaak:)\s*)', line):  # omschrijving
                 line = re.sub('\s*(De kandidaat kan:)', "", line)
                 new_vals[len(new_vals) - 1].omschrijving = line
 
-            if re.search('(\d.\s+)', line):
-                print('3. line: {}'.format(line))
-                # print(len(new_vals))
+            if re.search('(\d.\s+)', line):  # leerdoel
                 line = re.sub('\d.\s*', "", line)
                 new_vals[len(new_vals) - 1].add_onderdeel(line)
 
