@@ -33,20 +33,23 @@ class JsonContainer(object):
 
     def parse_goals(self, data):
         new_vals = []
-        length = 0  # current length of the new_vals list
         for line in data:
-            if re.search('(^[a-zA-Z]/[a-zA-Z]+/\d.)', line):
+            # print('line: {}'.format(line))
+            if re.search('(^[a-zA-Z]/[a-zA-Z]+/\w.)', line):
+                # print(len(new_vals))
                 new_vals.append(Leerdoel())
-                length = len(new_vals) - 1
-                new_vals[length].titel = line
+                # print('Appent one, len: {}'.format(len(new_vals)))
+                new_vals[len(new_vals) - 1].titel = line
 
             if re.search('((Deeltaak:)\s*)', line):
+                # print(len(new_vals))
                 line = re.sub('\s*(De kandidaat kan:)', "", line)
-                new_vals[length].omschrijving = line
+                new_vals[len(new_vals) - 1].omschrijving = line
 
             if re.search('(\d.\s+)', line):
-                # print('3. line: {}'.format(line))
+                print('3. line: {}'.format(line))
+                # print(len(new_vals))
                 line = re.sub('\d.\s*', "", line)
-                new_vals[length].add_onderdeel(line)
+                new_vals[len(new_vals) - 1].add_onderdeel(line)
 
         return new_vals
