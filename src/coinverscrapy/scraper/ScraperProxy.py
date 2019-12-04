@@ -16,6 +16,7 @@ class ScraperProxy(IModuleTemplate):
         handle_fs(self.output)
 
     def run(self):
+        print("scraping website for pdfs...")
         self.__scraper.execute()
 
     def finalize(self):
@@ -24,14 +25,7 @@ class ScraperProxy(IModuleTemplate):
             download_files(self.__scraper.get_data(), self.output)
         except IOError as ioe:
             print("error! -> {}".format(ioe))
-            print("\n\n")
-            print("Faulty URL supplied! -> quitting execution")
             exit(0)
-
-
-"""
-function area
-"""
 
 
 def download_files(urls, output_folder):

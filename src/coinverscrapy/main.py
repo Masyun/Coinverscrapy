@@ -18,7 +18,7 @@ __license__ = "MIT"
 _logger = logging.getLogger(__name__)
 
 
-def scrape_website(url):
+def scrape_website(url, local_output):
     """Main scrape function
 
     Args:
@@ -26,12 +26,13 @@ def scrape_website(url):
 
     Returns:
       int: 0
+      :param local_output:
       :param url:
     """
-    ScraperProxy(Scraper(url), "pdfs").start()
+    ScraperProxy(Scraper(url), local_output).start()
 
 
-def parse_tojson(input_location):
+def parse_tojson(input_location, output_location):
     """Main parse function
 
     Args:
@@ -39,9 +40,10 @@ def parse_tojson(input_location):
 
     Returns:
       int: 0
+      :param output_location:
       :param input_location:
     """
-    ParserProxy(Parser(input_location), 'json').start()
+    ParserProxy(Parser(input_location), output_location).start()
 
 
 def parse_args(args):
@@ -107,9 +109,11 @@ def main(args):
     args = parse_args(args)
     setup_logging(args.loglevel)
 
-    scrape_website(args.url)
-    parse_tojson("pdfs")
-
+    # scrape_website(args.url, "pdfs")
+    if args.output:
+        parse_tojson("pdfs", args.output)
+    else:
+        parse_tojson("pdfs", 'C:\\Json_vakken')  # C:\Users\yunus\Desktop
 
 def run():
     """Entry point for console_scripts

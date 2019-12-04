@@ -13,3 +13,6 @@ class Leerdoel(object):
 
     def add_onderdeel(self, value):
         self.onderdelen.append(value)
+
+    def __str__(self):
+        return self.titel

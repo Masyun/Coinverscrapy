@@ -5,7 +5,7 @@ from src.coinverscrapy.model.formatting_handlers.abs_handler.AbstractHandler imp
 
 class NewlineHTMLCompatibilityHandler(AbstractHandler):
     def handle(self, request: str) -> str:
-        # Just in case there are unnecessary spaces/newlines
+        # Just in case there are unnecessary trailing spaces/newlines
         request.rstrip()
         request.lstrip()
 

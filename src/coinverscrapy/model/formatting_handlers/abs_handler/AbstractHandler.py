@@ -1,6 +1,11 @@
 from abc import abstractmethod
 from src.coinverscrapy.model.formatting_handlers.abs_handler.Handler import Handler
 
+"""
+Minimal implementation of a handler which just passes the request to the next handler
+Any Handler extending from this, should be responsible for handling one task in the string formatting chain
+"""
+
 
 class AbstractHandler(Handler):
     _next_handler: Handler = None

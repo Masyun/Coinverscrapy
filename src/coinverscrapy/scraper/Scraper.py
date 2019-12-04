@@ -10,7 +10,6 @@ class Scraper(IModuleProxy):
 
     def execute(self):
         # Main logic for scraping a webpage - this is where most, if not all logic should be contained
-        print(f'Executing scraper on {self.get_url()}\n')
         self.data = extract_urls_from_url(self.get_url())
 
     def get_url(self):
