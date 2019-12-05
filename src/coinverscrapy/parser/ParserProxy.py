@@ -15,9 +15,6 @@ class ParserProxy(IModuleTemplate):
     def run(self):
         print("Parsing pdfs to json...")
         self.parser.execute()
-        print('Failed:\n')
-        for fail in self.parser.get_failures():
-            print(fail.replace('pdfs\\', ''))
 
     def finalize(self):
         try:
@@ -27,29 +24,28 @@ class ParserProxy(IModuleTemplate):
             print("error! -> \n{}".format(ioe))
             print("\n\n")
 
+        for idx, fail in enumerate(self.parser.get_failures()):
+            print('Failed:\n')
+            print(str(idx) + '. ' + fail.replace('pdfs\\', ''))
+
 
 def write_json(json_objs, output_folder):
     i = 0
 
     for json_obj in json_objs:
         json_obj = json.loads(json_obj)
-        title = json.dumps(json_obj['titel']) \
-            .replace('/', '') \
-            .strip("\"")
-        title = title.encode('utf-8', 'ignore') \
-            .decode('unicode_escape')
+        title = json.dumps(json_obj['titel']).replace('/', '').strip("\"")
+        # title = title.encode('utf-8', 'ignore') \
+        #     .decode('unicode_escape')
 
         file_path = (output_folder + '\\' + title + '.json')
         try:
             with open(file_path, 'w+', encoding="utf-8") as outfile:
-                # print('json_obj: \n{}'.format(json_obj))
-                # json_str = json.dumps(json_obj, sort_keys=True, indent=4, ensure_ascii=False)
-                json.dump(json_obj, outfile, indent=4)
-                # outfile.write(json_str)
+                json_str = json.dumps(json_obj, ensure_ascii=False).encode('utf-8').decode()
+                json.dump(json_str, outfile, indent=4)
         except OSError as ose:
             print(ose)
         i += 1
-        # time.sleep(0.1)
 
 
 def handle_fs(folder_name):

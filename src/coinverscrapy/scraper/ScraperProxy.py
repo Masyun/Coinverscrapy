@@ -16,7 +16,7 @@ class ScraperProxy(IModuleTemplate):
         handle_fs(self.output)
 
     def run(self):
-        print("scraping website for pdfs...")
+        print("Scraping website for pdfs...")
         self.__scraper.execute()
 
     def finalize(self):
@@ -76,5 +76,5 @@ def print_progress(iteration, total, prefix='', suffix='', decimals=0, bar_lengt
     sys.stdout.write('\r%s |%s| %s%s %s' % (prefix, bar, percents, '%', suffix)),
 
     if iteration == total:
-        sys.stdout.write('\n')
+        sys.stdout.write('\n\n')
     sys.stdout.flush()

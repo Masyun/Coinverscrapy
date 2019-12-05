@@ -13,17 +13,13 @@ Serialize/Deserialize using Jsonpickle in the parser
 
 class JsonContainer(object):
 
-    def __init__(self, table, fileName):
-        self.fileName = fileName.replace('pdfs\\', '')
+    def __init__(self, table, file_name):
+        self.fileName = file_name.replace('pdfs\\', '')
         self.titel = ''
         self.omschrijving = ''
         self.leerdoelen = [Leerdoel]
 
-        data = None
-        if type(table) is Series:
-            data = table.to_frame()[0].tolist()
-        elif type(table) is Table:
-            data = table.df[0].tolist()
+        data = self.parse_data(table)
 
         self.parse_meta(data)
         self.leerdoelen = self.parse_leerdoelen(data)
@@ -46,9 +42,10 @@ class JsonContainer(object):
         new_vals = []
         idx = -1
         for line in data:
+            # print(line)
             try:
-                if re.search('(^[a-zA-Z]+/[a-zA-Z&.]+/\w*.\s*)', line):  # titel
-                # if re.search('(^[a-zA-Z]+/[a-zA-Z&.]+/\w)', line):  # titel
+                # if re.search('(^[a-zA-Z]+/[a-zA-Z&.]+/\w*.\s*)', line):  # titel
+                if re.search('(^[a-zA-Z]+/[a-zA-Z&.]*/[a-zA-Z0-9.]*[\d\s]*)', line):  # titel
                     new_vals.append(Leerdoel())
                     idx = (len(new_vals) - 1)
                     new_vals[idx].titel = line
@@ -60,9 +57,14 @@ class JsonContainer(object):
                 if re.search('^(\d.\s+)', line):  # leerdoel
                     line = re.sub('\d.\s*', "", line)
                     new_vals[idx].add_onderdeel(line)
-
             except IndexError:
-                self.leerdoelen = None
-                break
+                return None
 
         return new_vals
+
+    def parse_data(self, table):
+        if type(table) is Series:
+            return table.to_frame()[0].tolist()
+        elif type(table) is Table:
+            return table.df[0].tolist()
+        return None

@@ -38,7 +38,7 @@ class Parser(IModuleProxy):
             .set_next(SubTaskHandler()) \
             .set_next(NumericListHandler()) \
             .set_next(NumericListEdgecaseHandler()) \
-            .set_next(NewlineHTMLCompatibilityHandler())
+            .set_next(NewlineHTMLCompatibilityHandler())\
 
     def execute(self):
         file_count = len(os.listdir(self._location))
@@ -55,7 +55,6 @@ class Parser(IModuleProxy):
                 json_obj = JsonContainer(table[0], file.path)
                 if json_obj.leerdoelen is None:
                     self._failures.append(file.path)
-                    break
                 # Encode the Json container object to a valid json structure
                 result_json = jsonpickle.encode(json_obj, unpicklable=False)
 
@@ -66,8 +65,7 @@ class Parser(IModuleProxy):
     def format_content(self, file):
         try:
             tables = camelot.read_pdf(file.path, pages='all', split_text=True)
-        except IndexError as ie:
-            print(ie)
+        except IndexError:
             return None
 
         for table in tables:  # Each table in the file
@@ -122,5 +120,5 @@ def print_progress(iteration, total, prefix='', suffix='', decimals=0, bar_lengt
     sys.stdout.write('\r%s |%s| %s%s %s' % (prefix, bar, percents, '%', suffix)),
 
     if iteration == total:
-        sys.stdout.write('\n')
+        sys.stdout.write('\n\n')
     sys.stdout.flush()

@@ -1,9 +1,7 @@
 import argparse
+import os
 import sys
 import logging
-import os
-import camelot
-import json
 
 from src.coinverscrapy import __version__
 from src.coinverscrapy.scraper.Scraper import Scraper
@@ -100,6 +98,18 @@ def setup_logging(loglevel):
                         format=logformat, datefmt="%Y-%m-%d %H:%M:%S")
 
 
+def parse_output_dir(args):
+    if args.output:
+        output_dir = args.output
+    else:
+        if sys.platform.startswith('darwin'):  # macOS
+            output_dir = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop\json_vakken')
+        elif sys.platform.startswith('win32'):  # windows
+            output_dir = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop\json_vakken')
+
+    return output_dir
+
+
 def main(args):
     """Main entry point allowing external calls
 
@@ -108,12 +118,12 @@ def main(args):
     """
     args = parse_args(args)
     setup_logging(args.loglevel)
+    output_dir = parse_output_dir(args)
 
-    # scrape_website(args.url, "pdfs")
-    if args.output:
-        parse_tojson("pdfs", args.output)
-    else:
-        parse_tojson("pdfs", 'C:\\Json_vakken')  # C:\Users\yunus\Desktop
+    print('output directory: {}'.format(output_dir))
+    scrape_website(args.url, "pdfs")
+    parse_tojson("pdfs", output_dir)
+
 
 def run():
     """Entry point for console_scripts
