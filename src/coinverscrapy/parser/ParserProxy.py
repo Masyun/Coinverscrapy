@@ -23,9 +23,8 @@ class ParserProxy(IModuleTemplate):
         except IOError as ioe:
             print("error! -> \n{}".format(ioe))
             print("\n\n")
-
-        for idx, fail in enumerate(self.parser.get_failures()):
             print('Failed:\n')
+        for idx, fail in enumerate(self.parser.get_failures()):
             print(str(idx) + '. ' + fail.replace('pdfs\\', ''))
 
 
@@ -34,11 +33,10 @@ def write_json(json_objs, output_folder):
 
     for json_obj in json_objs:
         json_obj = json.loads(json_obj)
-        title = json.dumps(json_obj['titel']).replace('/', '').strip("\"")
-        # title = title.encode('utf-8', 'ignore') \
-        #     .decode('unicode_escape')
+        title = json.dumps(json_obj['titel']).replace('/', '').strip("\"").encode('utf-8', 'ignore') \
+            .decode('unicode_escape')
 
-        file_path = (output_folder + '\\' + title + '.json')
+        file_path = os.path.join(output_folder, '{}.json'.format(title))
         try:
             with open(file_path, 'w+', encoding="utf-8") as outfile:
                 json_str = json.dumps(json_obj, ensure_ascii=False).encode('utf-8').decode()

@@ -54,7 +54,7 @@ class Parser(IModuleProxy):
                 # Create the json container
                 json_obj = JsonContainer(table[0], file.path)
                 if json_obj.leerdoelen is None:
-                    self._failures.append(file.path)
+                    self._failures.append(json_obj.fileName)
                 # Encode the Json container object to a valid json structure
                 result_json = jsonpickle.encode(json_obj, unpicklable=False)
 
