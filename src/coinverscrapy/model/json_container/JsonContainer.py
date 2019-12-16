@@ -24,7 +24,21 @@ class JsonContainer(object):
         self.parse_meta(data)
         self.leerdoelen = self.parse_leerdoelen(data)
 
+    def format_unicode(self):
+        self.titel = self.titel.encode('utf-8').decode()
+        self.omschrijving = self.omschrijving.encode('utf-8').decode()
+
+        try:
+            for idx, leerdoel in enumerate(self.leerdoelen):
+                self.leerdoelen[idx] = leerdoel.format_unicode()
+        except TypeError:
+            self.leerdoelen = None
+
+        return self
+
     def parse_meta(self, data):
+        regex = "([A-Za-z\-'\. ]*) as ([A-Za-z\-'\. ]*)"
+
         if 'Taak:' in data[1]:  # There is no module line
             self.titel = data.pop(0)
         else:  # there is a module line
@@ -36,13 +50,17 @@ class JsonContainer(object):
                 if 'Taak:' not in data[0]:
                     data.pop(0)
 
+        # match = re.match(regex, self.titel)
+
+        clean_string = re.sub('\W+', '', self.titel)  # make sure there are no forbidden characters in the file name/title
+        self.titel = clean_string
+
         self.omschrijving = data.pop(0)
 
     def parse_leerdoelen(self, data):
         new_vals = []
         idx = -1
         for line in data:
-            # print(line)
             try:
                 # if re.search('(^[a-zA-Z]+/[a-zA-Z&.]+/\w*.\s*)', line):  # titel
                 if re.search('(^[a-zA-Z]+/[a-zA-Z&.]*/[a-zA-Z0-9.]*[\d\s]*)', line):  # titel

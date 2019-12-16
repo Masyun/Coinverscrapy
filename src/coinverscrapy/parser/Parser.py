@@ -1,3 +1,4 @@
+import logging
 import os
 
 import camelot
@@ -6,13 +7,16 @@ import pandas as pd
 
 from src.coinverscrapy.model.formatting_handlers.CompetenceNewlineHandler import CompetenceNewlineHandler
 from src.coinverscrapy.model.formatting_handlers.GenericListHandler import GenericListHandler
-from src.coinverscrapy.model.formatting_handlers.NewlineHTMLCompatibilityHandler import NewlineHTMLCompatibilityHandler
+from src.coinverscrapy.model.formatting_handlers.SpecialcharReductionFormatter import SpecialcharReductionFormatter
 from src.coinverscrapy.model.formatting_handlers.NumericListEdgecaseHandler import NumericListEdgecaseHandler
 from src.coinverscrapy.model.formatting_handlers.NumericListHandler import NumericListHandler
 from src.coinverscrapy.model.formatting_handlers.RootHandler import RootHandler
 from src.coinverscrapy.model.formatting_handlers.SubTaskHandler import SubTaskHandler
 from src.coinverscrapy.model.json_container.JsonContainer import JsonContainer
 from src.coinverscrapy.model.proxy.IModuleProxy import IModuleProxy
+
+jsonpickle.set_preferred_backend('json')
+jsonpickle.set_encoder_options('json', ensure_ascii=False)
 
 
 class Parser(IModuleProxy):
@@ -37,8 +41,7 @@ class Parser(IModuleProxy):
             .set_next(CompetenceNewlineHandler()) \
             .set_next(SubTaskHandler()) \
             .set_next(NumericListHandler()) \
-            .set_next(NumericListEdgecaseHandler()) \
-            .set_next(NewlineHTMLCompatibilityHandler())\
+            .set_next(NumericListEdgecaseHandler())
 
     def execute(self):
         file_count = len(os.listdir(self._location))
@@ -52,7 +55,9 @@ class Parser(IModuleProxy):
                     break
 
                 # Create the json container
-                json_obj = JsonContainer(table[0], file.path)
+                json_obj = JsonContainer(table[0], file.path).format_unicode()
+
+
                 if json_obj.leerdoelen is None:
                     self._failures.append(json_obj.fileName)
                 # Encode the Json container object to a valid json structure

@@ -39,22 +39,24 @@ def download_files(urls, output_folder):
             file.write(rq.content)
             file.close()
         i += 1
-        time.sleep(0.1)
         print_progress(i, total_filecount, prefix='Progress:', suffix='Complete', bar_length=50)
 
 
 def handle_fs(folder_name):
-    try:
-        os.makedirs(folder_name)
-    except FileExistsError:
-        for file in os.listdir(folder_name):
-            file_path = os.path.join(folder_name, file)
-            try:
-                if os.path.isfile(file_path):
-                    os.unlink(file_path)
-                # elif os.path.isdir(file_path): shutil.rmtree(file_path)
-            except Exception as e:
-                print(e)
+    for retry in range(10):
+        try:
+            os.makedirs(folder_name)
+            break
+        except PermissionError as pe:
+            print("{} Retrying folder creation".format(pe))
+    for file in os.listdir(folder_name):
+        file_path = os.path.join(folder_name, file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            # elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception as e:
+            print(e)
 
 
 def print_progress(iteration, total, prefix='', suffix='', decimals=0, bar_length=100):

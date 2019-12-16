@@ -121,7 +121,7 @@ def main(args):
     output_dir = parse_output_dir(args)
 
     print('output directory: {}'.format(output_dir))
-    # scrape_website(args.url, "pdfs")
+    scrape_website(args.url, "pdfs")
     parse_tojson("pdfs", output_dir)
 
 

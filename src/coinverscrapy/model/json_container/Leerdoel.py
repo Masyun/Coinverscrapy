@@ -5,6 +5,15 @@ class Leerdoel(object):
         self.omschrijving = description
         self.onderdelen = []
 
+    def format_unicode(self):
+        self.titel = self.titel.encode('utf-8').decode()
+        self.omschrijving = self.omschrijving.encode('utf-8').decode()
+
+        for idx, onderdeel in enumerate(self.onderdelen):
+            self.onderdelen[idx] = onderdeel.encode('utf-8').decode()
+
+        return self
+
     def set_title(self, value):
         self.titel = value
 
