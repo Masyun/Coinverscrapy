@@ -1,4 +1,5 @@
 import re
+import string
 
 from camelot.core import Table
 from pandas import Series
@@ -25,8 +26,8 @@ class JsonContainer(object):
         self.leerdoelen = self.parse_leerdoelen(data)
 
     def format_unicode(self):
-        self.titel = self.titel.encode('utf-8').decode()
-        self.omschrijving = self.omschrijving.encode('utf-8').decode()
+        self.titel = remove_unicode(self.titel)
+        self.omschrijving = remove_unicode(self.omschrijving)
 
         try:
             for idx, leerdoel in enumerate(self.leerdoelen):
@@ -37,8 +38,6 @@ class JsonContainer(object):
         return self
 
     def parse_meta(self, data):
-        regex = "([A-Za-z\-'\. ]*) as ([A-Za-z\-'\. ]*)"
-
         if 'Taak:' in data[1]:  # There is no module line
             self.titel = data.pop(0)
         else:  # there is a module line
@@ -50,11 +49,7 @@ class JsonContainer(object):
                 if 'Taak:' not in data[0]:
                     data.pop(0)
 
-        # match = re.match(regex, self.titel)
-
-        clean_string = re.sub('\W+', '', self.titel)  # make sure there are no forbidden characters in the file name/title
-        self.titel = clean_string
-
+        self.titel = re.sub('\W+', '', self.titel)  # make sure there are no forbidden characters in the file name/title
         self.omschrijving = data.pop(0)
 
     def parse_leerdoelen(self, data):
@@ -62,7 +57,6 @@ class JsonContainer(object):
         idx = -1
         for line in data:
             try:
-                # if re.search('(^[a-zA-Z]+/[a-zA-Z&.]+/\w*.\s*)', line):  # titel
                 if re.search('(^[a-zA-Z]+/[a-zA-Z&.]*/[a-zA-Z0-9.]*[\d\s]*)', line):  # titel
                     new_vals.append(Leerdoel())
                     idx = (len(new_vals) - 1)
@@ -86,3 +80,9 @@ class JsonContainer(object):
         elif type(table) is Table:
             return table.df[0].tolist()
         return None
+
+
+def remove_unicode(line):
+    printable = set(string.printable)
+    line = ''.join(filter(lambda x: x in printable, line))
+    return line

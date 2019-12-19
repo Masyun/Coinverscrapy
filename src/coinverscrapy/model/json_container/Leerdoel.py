@@ -1,3 +1,7 @@
+import re
+import string
+
+
 class Leerdoel(object):
 
     def __init__(self, title='N.A.', description='N.A.'):
@@ -6,11 +10,11 @@ class Leerdoel(object):
         self.onderdelen = []
 
     def format_unicode(self):
-        self.titel = self.titel.encode('utf-8').decode()
-        self.omschrijving = self.omschrijving.encode('utf-8').decode()
+        self.titel = remove_unicode(self.titel)
+        self.omschrijving = remove_unicode(self.omschrijving)
 
         for idx, onderdeel in enumerate(self.onderdelen):
-            self.onderdelen[idx] = onderdeel.encode('utf-8').decode()
+            self.onderdelen[idx] = remove_unicode(onderdeel)
 
         return self
 
@@ -25,3 +29,9 @@ class Leerdoel(object):
 
     def __str__(self):
         return self.titel
+
+
+def remove_unicode(line):
+    printable = set(string.printable)
+    line = ''.join(filter(lambda x: x in printable, line))
+    return line

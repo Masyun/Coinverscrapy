@@ -9,7 +9,7 @@ from src.coinverscrapy.model.template.IModuleTemplate import IModuleTemplate
 
 class ScraperProxy(IModuleTemplate):
     def __init__(self, real_scraper, output):
-        self.__scraper = real_scraper
+        self._scraper = real_scraper
         self.output = output
 
     def initialize(self):
@@ -17,12 +17,12 @@ class ScraperProxy(IModuleTemplate):
 
     def run(self):
         print("Scraping website for pdfs...")
-        self.__scraper.execute()
+        self._scraper.execute()
 
     def finalize(self):
         try:
             print_progress(0, len(self.output), prefix='Progress:', suffix='Complete', bar_length=50)
-            download_files(self.__scraper.get_data(), self.output)
+            download_files(self._scraper.get_data(), self.output)
         except IOError as ioe:
             print("error! -> {}".format(ioe))
             exit(0)
@@ -49,6 +49,9 @@ def handle_fs(folder_name):
             break
         except PermissionError as pe:
             print("{} Retrying folder creation".format(pe))
+        except FileExistsError:
+            break
+
     for file in os.listdir(folder_name):
         file_path = os.path.join(folder_name, file)
         try:
