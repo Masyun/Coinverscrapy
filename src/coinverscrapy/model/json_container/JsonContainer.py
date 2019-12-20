@@ -72,7 +72,10 @@ class JsonContainer(object):
             except IndexError:
                 return None
 
-        return new_vals
+        if len(new_vals) > 0:
+            return new_vals
+        else:
+            return None
 
     def parse_data(self, table):
         if type(table) is Series:
@@ -83,6 +86,11 @@ class JsonContainer(object):
 
 
 def remove_unicode(line):
+    '''
+
+    :param line:
+    :return:
+    '''
     printable = set(string.printable)
     line = ''.join(filter(lambda x: x in printable, line))
     return line
