@@ -6,7 +6,7 @@ from src.coinverscrapy.model.formatting_handlers.abs_handler.AbstractHandler imp
 class ExcessWhitespaceHandler(AbstractHandler):
     def handle(self, request: str) -> str:
         # Just in case there are unnecessary trailing spaces/newlines
-        match = re.search('(\s+)', request)
+        match = re.search('(\s{2,})', request)
         if match:
             mutated = re.sub(match.re, " ", request)
             request = mutated

@@ -11,10 +11,8 @@ class NumericListHandler(AbstractHandler):
             numbering = ''
             mutated = ''
             try:
-                # print(match.group(1))
                 numbering = match.group(1).strip()
                 mutated = re.sub(match.re, "", request)
-                # print(mutated)
             except IndexError as ie:
                 print(ie)
             finally:
