@@ -109,6 +109,8 @@ class Parser(IModuleProxy):
     def get_average_accuracy(self):
         return round(self._accuracy / self._file_count, 2)
 
+    def get_filecount(self):
+        return self._file_count
 
 def append_tables(tables):
     frames = []

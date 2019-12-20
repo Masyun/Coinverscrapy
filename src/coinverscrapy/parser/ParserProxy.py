@@ -17,7 +17,8 @@ class ParserProxy(IModuleTemplate):
         self.parser.execute()
 
     def finalize(self):
-        print('Average parsing accuracy: {}%'.format(self.parser.get_average_accuracy()))
+        print('Average parsing accuracy: {}% out of {} files'.format(self.parser.get_average_accuracy(),
+                                                                     self.parser.get_filecount()))
         try:
             write_json(self.parser.get_data(), self.output)
         except IOError as ioe:
