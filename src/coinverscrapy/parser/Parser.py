@@ -16,9 +16,38 @@ from src.coinverscrapy.model.formatting_handlers.NumericListHandler import Numer
 from src.coinverscrapy.model.formatting_handlers.RootHandler import RootHandler
 from src.coinverscrapy.model.formatting_handlers.SubTaskHandler import SubTaskHandler
 from src.coinverscrapy.model.json_container.JsonContainer import JsonContainer
-from src.coinverscrapy.model.proxy.IModuleProxy import IModuleProxy
+from src.coinverscrapy.model.proxy.ModuleExecutor import ModuleExecutor
 
-class Parser(IModuleProxy):
+
+class Parser(ModuleExecutor):
+    """
+    Parser module implementation extending from the ModuleProxy - which gives any of our 'modules' an execute method to keep the main logic neat and consistent.
+    This parser does a couple things
+    - Handle formatting of the contents of a parsed pdf(restoring errors that originated during the parsing process)
+    - Keep track of certain parsing statistics
+    - Handle any side-edgecases that may occur(multiple tables in one file)
+    - Doing any checks to ensure proper output
+    ...
+
+    Attributes
+    ----------
+    data : list
+        list of json_objects retrieved by parsing the pdf files
+    location : str
+        location to look at for pdfs to be parsed - /pdfs/ in the default case
+    failures : list
+        a list of all file names that could not have been parsed
+    accuracy : int
+        current average parsing accuracy(during a run)
+    file_count : int
+        total number of files found in the input_location
+
+    Methods
+    -------
+    setup_formatting_handlers(self)
+        Sets up the chain of formatting Handlers(model/formatting_handlers)
+    """
+
     def __init__(self, input_location):
         self._data = []
         self._location = input_location
@@ -111,6 +140,7 @@ class Parser(IModuleProxy):
 
     def get_filecount(self):
         return self._file_count
+
 
 def append_tables(tables):
     frames = []

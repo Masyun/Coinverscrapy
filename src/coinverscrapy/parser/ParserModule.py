@@ -1,10 +1,10 @@
 import json
 import os
 
-from src.coinverscrapy.model.template.IModuleTemplate import IModuleTemplate
+from src.coinverscrapy.model.template.ModuleTemplate import ModuleTemplate
 
 
-class ParserProxy(IModuleTemplate):
+class ParserModule(ModuleTemplate):
     def __init__(self, real_parser, output):
         self.parser = real_parser
         self.output = output

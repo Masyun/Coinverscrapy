@@ -1,12 +1,31 @@
 import requests
 from bs4 import BeautifulSoup as bs
-from src.coinverscrapy.model.proxy.IModuleProxy import IModuleProxy
+from src.coinverscrapy.model.proxy.ModuleExecutor import ModuleExecutor
 
 
-class Scraper(IModuleProxy):
+class Scraper(ModuleExecutor):
+    """
+    Parser module implementation extending from the ModuleProxy - which gives any of our 'modules' an execute method to keep the main logic neat and consistent.
+
+
+    ...
+
+    Attributes
+    ----------
+    url : str
+        the url passed in by the user - to be scraped for pdf files(or links, rather)
+    data : list
+        a list containing all the urls of the pdf files - extracted from the html
+
+    Methods
+    -------
+    extract_urls_from_url(url: str)
+        populates the data field with urls of the pdf files from the given url
+    """
+
     def __init__(self, url):
         self.url = url
-        self.data = {}
+        self.data = []
 
     def execute(self):
         # Main logic for scraping a webpage - this is where most, if not all logic should be contained
@@ -26,7 +45,7 @@ def extract_urls_from_url(url):
       url : string
 
     Returns:
-      names_urls: map
+      names_urls: list
     """
     r = requests.get(url)
 

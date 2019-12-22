@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 
-class IModuleTemplate:
+class ModuleTemplate:
 
     @abstractmethod
     def initialize(self): pass

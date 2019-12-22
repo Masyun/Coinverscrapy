@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 
-class IModuleProxy:
+class ModuleExecutor:
 
     @abstractmethod
     def execute(self): pass
