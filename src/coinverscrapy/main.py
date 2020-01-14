@@ -5,9 +5,9 @@ import logging
 
 from src.coinverscrapy import __version__
 from src.coinverscrapy.scraper.Scraper import Scraper
-from src.coinverscrapy.scraper.ScraperProxy import ScraperProxy
+from src.coinverscrapy.scraper.ScraperModule import ScraperModule
 from src.coinverscrapy.parser.Parser import Parser
-from src.coinverscrapy.parser.ParserProxy import ParserProxy
+from src.coinverscrapy.parser.ParserModule import ParserModule
 
 __author__ = "MasYun"
 __copyright__ = "MasYun"
@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 
 
 def scrape_website(url, local_output):
-    """Main scrape function
+    """Scrapes a given website URL for any pdf files and downloads them to the /pdf/ directory
 
     Args:
       URL : string
@@ -27,11 +27,11 @@ def scrape_website(url, local_output):
       :param local_output:
       :param url:
     """
-    ScraperProxy(Scraper(url), local_output).start()
+    ScraperModule(Scraper(url), local_output).start()
 
 
 def parse_tojson(input_location, output_location):
-    """Main parse function
+    """Parses the scraped pdf's into our JSON structure and writes it to /desktop/json_vakken or the output directory specified with the -o flag
 
     Args:
       URL : string
@@ -41,7 +41,7 @@ def parse_tojson(input_location, output_location):
       :param output_location:
       :param input_location:
     """
-    ParserProxy(Parser(input_location), output_location).start()
+    ParserModule(Parser(input_location), output_location).start()
 
 
 def parse_args(args):
@@ -106,12 +106,11 @@ def parse_output_dir(args):
             output_dir = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop\json_vakken')
         elif sys.platform.startswith('win32'):  # windows
             output_dir = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop\json_vakken')
-
     return output_dir
 
 
 def main(args):
-    """Main entry point allowing external calls
+    """Main entry point
 
     Args:
       args ([str]): command line parameter list
@@ -126,7 +125,7 @@ def main(args):
 
 
 def run():
-    """Entry point for console_scripts
+    """Entry point for console scripts
     """
     main(sys.argv[1:])
 

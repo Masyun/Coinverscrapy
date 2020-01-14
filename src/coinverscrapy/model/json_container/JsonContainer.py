@@ -13,6 +13,11 @@ Serialize/Deserialize using Jsonpickle in the parser
 
 
 class JsonContainer(object):
+    """
+    A container class representing our desired json_structure. Extending from a native object is required for JsonPickle to serialize the container
+    ...
+
+    """
 
     def __init__(self, table, file_name):
         self.fileName = file_name.replace('pdfs\\', '')

@@ -1,13 +1,39 @@
 import os
 import sys
-import time
 
 import requests
 
-from src.coinverscrapy.model.template.IModuleTemplate import IModuleTemplate
+from src.coinverscrapy.model.template.ModuleTemplate import ModuleTemplate
 
 
-class ScraperProxy(IModuleTemplate):
+class ScraperModule(ModuleTemplate):
+    """
+    Scraper proxy layer - responsible for handling any pre- and postconditions that may need to be met before executing the scraper itself.
+    This is achieved by extending from the ModuleTemplate class, providing an initialize, run and finalize implementation.
+    By calling the parent start() method, these implementations get executed in order.
+    This class
+    - creates the necessary folder in the filesystem
+    - runs the scraper.execute method
+    - then download the files by calling the scraper.get_data() containing all the urls
+
+
+    ...
+
+    Attributes
+    ----------
+    _scraper : Scraper
+        an instance of a scraper
+    output : str
+        the path specifying the output directory of the downloaded pdfs
+
+    Methods
+    -------
+    download_files(urls, output_folder)
+        Does a GET request to the (pdf)urls from the scraper and saves the content to the ./pdfs/ directory
+    handle_fs(folder_name)
+        Creates the output ./pdfs/ folder in the project directory
+    """
+
     def __init__(self, real_scraper, output):
         self._scraper = real_scraper
         self.output = output
@@ -16,7 +42,7 @@ class ScraperProxy(IModuleTemplate):
         handle_fs(self.output)
 
     def run(self):
-        print("Scraping website for pdfs...")
+        print("Scraping url for pdfs...")
         self._scraper.execute()
 
     def finalize(self):
@@ -43,6 +69,7 @@ def download_files(urls, output_folder):
 
 
 def handle_fs(folder_name):
+    # Hacky way to bypass windows' permission error when trying to create the required folders
     for retry in range(10):
         try:
             os.makedirs(folder_name)
@@ -57,7 +84,6 @@ def handle_fs(folder_name):
         try:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
-            # elif os.path.isdir(file_path): shutil.rmtree(file_path)
         except Exception as e:
             print(e)
 
