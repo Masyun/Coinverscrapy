@@ -49,7 +49,6 @@ class JsonContainer(object):
                 if 'Taak:' not in data[0]:
                     data.pop(0)
 
-        self.titel = re.sub('\W+', '', self.titel)  # make sure there are no forbidden characters in the file name/title
         self.omschrijving = data.pop(0)
 
     def parse_leerdoelen(self, data):
