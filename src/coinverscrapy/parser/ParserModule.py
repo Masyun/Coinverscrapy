@@ -38,8 +38,12 @@ def write_json(json_objs, output_folder):
     i = 0
     for json_obj in json_objs:
         # json_obj = json.loads(json_obj)
-        title = json.dumps(json_obj['titel']).replace('/', '').strip("\"") \
-            .encode('utf-8', 'ignore').decode('unicode_escape')
+        title = json.dumps(json_obj['titel'])\
+            .replace('/', '')\
+            .replace("\"", "")\
+            .replace(":", "") \
+            .encode('utf-8', 'ignore')\
+            .decode('unicode_escape')
 
         file_path = os.path.join(output_folder, '{}.json'.format(title))
 
